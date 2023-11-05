@@ -7,12 +7,23 @@ pipeline {
             label 'android'
         }
     }
-
+    environment {
+        DEBUG_KEYSTORE = credentials('debug.keystore')
+    }
     stages {
-        stage("preparation") {
+        stage('preparation') {
             steps {
-                echo 'Hello, World!'
+                writeFile file: './app/debug.keystore', text: readFile(DEBUG_KEYSTORE)
             }
+        }
+        stage('build') {
+            sh './gradlew :app:assembleDebug'
+        }
+        state('test') {
+            sh './gradlew :app:testDebugUnitTest'
+        }
+        state('deploy') {
+            archiveArtifacts artifacts: './app/build/outputs/'
         }
     }
 }
