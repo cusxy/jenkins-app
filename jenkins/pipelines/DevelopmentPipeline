@@ -1,0 +1,18 @@
+#!/bin/groovy
+
+pipeline {
+    agent {
+        docker {
+            image 'cusxy/jenkins-android:latest'
+            label 'android'
+        }
+    }
+
+    stages {
+        stage("preparation") {
+            steps {
+                echo 'Hello, World!'
+            }
+        }
+    }
+}
