@@ -17,13 +17,19 @@ pipeline {
             }
         }
         stage('build') {
-            sh './gradlew :app:assembleDebug'
+            steps {
+                sh './gradlew :app:assembleDebug'
+            }
         }
-        state('test') {
-            sh './gradlew :app:testDebugUnitTest'
+        stage('test') {
+            steps {
+                sh './gradlew :app:testDebugUnitTest'
+            }
         }
-        state('deploy') {
-            archiveArtifacts artifacts: './app/build/outputs/'
+        stage('deploy') {
+            steps {
+                archiveArtifacts artifacts: './app/build/outputs/'
+            }
         }
     }
 }
