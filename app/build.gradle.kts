@@ -31,6 +31,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    signingConfigs {
+        val debugKeystore = file("debug.keystore")
+        if (debugKeystore.exists()) {
+            getByName("debug") { storeFile = debugKeystore }
+        }
+    }
 }
 
 dependencies {
