@@ -9,11 +9,13 @@ pipeline {
     }
     environment {
         DEBUG_KEYSTORE = credentials('debug.keystore')
+        DEBUG_KEYSTORE_PROPERTIES = credentials('debug.keystore.properties')
     }
     stages {
         stage('preparation') {
             steps {
                 writeFile file: './app/debug.keystore', text: readFile(DEBUG_KEYSTORE)
+                writeFile file: './app/debug.keystore.properties', text: readFile(DEBUG_KEYSTORE_PROPERTIES)
             }
         }
         stage('build') {

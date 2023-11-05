@@ -1,3 +1,5 @@
+import java.util.Properties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
@@ -18,6 +20,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        val keystorePropertiesFile = file("debug.keystore.properties")
+        if (keystorePropertiesFile.exists()) {
+            getByName("debug") {
+                val keystoreProperties = Properties().apply { load(file("debug.keystore.properties").inputStream()) }
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,13 +44,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-
-    signingConfigs {
-        val debugKeystore = file("debug.keystore")
-        if (debugKeystore.exists()) {
-            getByName("debug") { storeFile = debugKeystore }
-        }
     }
 }
 
