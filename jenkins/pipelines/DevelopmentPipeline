@@ -14,8 +14,10 @@ pipeline {
     stages {
         stage('preparation') {
             steps {
-                writeFile file: './app/debug.keystore', text: readFile(DEBUG_KEYSTORE)
-                writeFile file: './app/debug.keystore.properties', text: readFile(DEBUG_KEYSTORE_PROPERTIES)
+                sh '''
+                    cp -f $DEBUG_KEYSTORE app/debug.keystore
+                    cp -f $DEBUG_KEYSTORE_PROPERTIES app/debug.keystore.properties
+                '''
             }
         }
         stage('build') {
@@ -30,7 +32,7 @@ pipeline {
         }
         stage('deploy') {
             steps {
-                archiveArtifacts artifacts: './app/build/outputs/'
+                archiveArtifacts artifacts: 'app/build/outputs/'
             }
         }
     }
